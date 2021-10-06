@@ -1,0 +1,14 @@
+{
+    "restartable": "rs",
+    "ignore": [
+      ".git",
+      "node_modules/"
+    ],
+    "verbose": false,
+    "execMap": {
+      "ts": "node --no-lazy -r ts-node/register"
+    },
+    "watch": ["src/"],
+    "ext": "json,ts",
+    "signal": "SIGINT"
+  }
