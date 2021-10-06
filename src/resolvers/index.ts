@@ -3,7 +3,7 @@ import logger from "../loggers/winston"
 export default {
   Query: {
     ping: (parent, {}, context) => {
-      logger.debug('ping back');
+      return 'ping back';
     }
   },
   Mutation: {
