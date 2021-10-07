@@ -38,7 +38,8 @@ export async function parseDomainLinks($, domain){
 
 export async function parseDomainMetaData(domain) {
   const browser = await puppeteer.launch({
-    headless: true
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
   const page = await browser.newPage();
