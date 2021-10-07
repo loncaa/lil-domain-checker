@@ -25,6 +25,7 @@ app.listen(port, async () => {
 });
 
 const apolloServer = createApolloServer();
+
 apolloServer.start().then(() => {
   logger.info(`🌚 Apollo Server ready at http://localhost:${port}/graphql!`);
   apolloServer.applyMiddleware({ app })
