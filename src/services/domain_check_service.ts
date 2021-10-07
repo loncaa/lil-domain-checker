@@ -45,6 +45,8 @@ export async function parseDomainMetaData(domain) {
   const page = await browser.newPage();
   await page.goto(domain);
 
+  await browser.close()
+
   const content = await page.content();
   const $ = cheerio.load(content);
 
