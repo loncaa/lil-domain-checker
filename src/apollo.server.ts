@@ -1,33 +1,10 @@
-import './env';
-import * as express from 'express';
-import * as helmet from 'helmet';
 import * as jwt from 'jsonwebtoken';
-import * as xss from 'xss-clean';
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import { makeExecutableSchema } from '@graphql-tools/schema'
-
-import morgan from './loggers/morgan';
 import logger from './loggers/winston';
 
 import typeDefs from './schemas';
 import resolvers from './resolvers';
-
-const port = process.env['PORT'];
-
-const app = express();
-app.use(morgan);
-app.use(express.json({ limit: '20mb' }));
-
-app.use(helmet());
-app.use(xss());
-
-app.get('/', async function (req, res) {
-  res.json({});
-});
-
-app.listen(port, async () => {
-  logger.info(`🚀 Server ready at http://localhost:${port}`)
-});
 
 const errorLoggingMiddleware = {
   async requestDidStart(requestContext) {
@@ -58,7 +35,7 @@ export const getTokenData = async (token: string) => {
   }
 };
 
-async function startApolloServer(){
+export function createApolloServer(){
   const schema = makeExecutableSchema({
     typeDefs: [...typeDefs],
     resolvers,
@@ -68,7 +45,7 @@ async function startApolloServer(){
     plugins: [
       {
         async serverWillStart() {
-          logger.debug('Server starting up!');
+          logger.info('Apollo Server starting up!');
         },
       },
       errorLoggingMiddleware
@@ -89,10 +66,5 @@ async function startApolloServer(){
     },
   });
 
-  await apolloServer.start();
-  await apolloServer.applyMiddleware({ app });
-}
-
-startApolloServer();
-
-export { app };
+  return apolloServer;
+};
