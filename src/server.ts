@@ -6,6 +6,7 @@ import morgan from './loggers/morgan';
 import logger from './loggers/winston';
 
 import { createApolloServer } from './apollo.server';
+import path = require('path');
 
 const port = process.env['PORT'];
 
@@ -16,8 +17,11 @@ app.use(express.json({ limit: '20mb' }));
 app.use(helmet());
 app.use(xss());
 
-app.get('/', async function (req, res) {
-  res.json({});
+app.use(express.static(path.join(__dirname, '../public')));
+
+app.get('/', (req, res) => {
+  const indexPath = path.join(__dirname, '../public/index.html');
+  res.sendFile(indexPath);
 });
 
 app.listen(port, async () => {
