@@ -2,9 +2,9 @@ import * as Redis from 'ioredis';
 import * as RedisLock from 'redis-lock';
 import * as Utils from 'util';
 
-const REDIS_PORT = process.env.REDIS_PORT || 6379;
+const REDISTOGO_URL = process.env.REDISTOGO_URL || `localhost:6379`;
 
-const redisClient = new Redis(REDIS_PORT, 'redis');
+const redisClient = new Redis(REDISTOGO_URL);
 const redisLock = Utils.promisify(new RedisLock(redisClient));
 
 export {
