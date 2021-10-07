@@ -1,21 +1,25 @@
 import { gql } from 'apollo-server-express';
 
-const main = gql`
-  type Query {
-    _: Boolean
+const domainCheck = gql`
+  type DomainLinksInformation {
+    internalLinksCount: Int!
+    externalLinksCount: Int!
+    httpsLinksCount: Int!
+    httpLinksCount: Int!
   }
-  type Mutation {
-    _: Boolean
-  }
-`;
 
-const test = gql`
-  extend type Query {
-    ping: String!
+  type DomainMetaData {
+    domain: String
+    title: String!
+    description: String!
+    domainLinksInformation: DomainLinksInformation
+  }
+
+  type Query {
+    fetchDomainMetaData(domain: String): DomainMetaData!
   }
 `;
 
 export default [
-  main,
-  test
+  domainCheck
 ]
