@@ -26,7 +26,6 @@
     "morgan": "^1.10.0",
     "puppeteer": "^10.4.0",
     "redis-lock": "^0.1.4",
-    "request-promise": "^4.2.6",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3",
     "winston": "^3.3.3",
