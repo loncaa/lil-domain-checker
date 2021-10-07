@@ -1,15 +1,15 @@
 import logger from "../loggers/winston"
-import { parseDomainMetaData, parseDomainLinks } from '../services/domain_check_service';
+import { parseDomainMetaData, parseDomainLinks } from '../services/domain_service';
 
 export default {
   DomainMetaData: {
-    domainLinksInformation: async ({ $, domain }) => {
-      const linkCountInformation = await parseDomainLinks($, domain);
+    domainLinksInformation: async ({ $ }) => {
+      const linkCountInformation = await parseDomainLinks($);
       return linkCountInformation;
     },
   },
   Query: {
-    fetchDomainMetaData: async (_, {domain}, __) => {
+    fetchDomainMetaData: async (_, { domain }, __) => {
       const response = await parseDomainMetaData(domain);
       return response;
     }

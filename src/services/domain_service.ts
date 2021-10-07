@@ -2,7 +2,8 @@ import * as cheerio from 'cheerio';
 import * as puppeteer from 'puppeteer';
 import loggers from '../loggers/winston';
 
-export async function parseDomainLinks($, domain){
+export async function parseDomainLinks($){
+  const { domain } = $;
   const externalLinks = [];
   const internalLinks = [];
 
@@ -47,6 +48,7 @@ export async function parseDomainMetaData(domain) {
 
   const content = await page.content();
   const $ = cheerio.load(content);
+  $['domain'] = domain;
 
   await browser.close()
 
