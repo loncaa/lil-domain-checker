@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "start": "ts-node src/main.ts",
+    "start": "ts-node src/server.ts",
     "start:dev": "NODE_ENV=development & nodemon --config nodemon.json src/server.ts"
   },
   "keywords": [],
