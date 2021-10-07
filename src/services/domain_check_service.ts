@@ -45,10 +45,10 @@ export async function parseDomainMetaData(domain) {
   const page = await browser.newPage();
   await page.goto(domain);
 
-  await browser.close()
-
   const content = await page.content();
   const $ = cheerio.load(content);
+
+  await browser.close()
 
   const titleElement = $('head > title') || $('head > meta[property=og:title]');
   const descriptionElement = $('head > meta[name=description]') || $('head > meta[property=og:description]');
