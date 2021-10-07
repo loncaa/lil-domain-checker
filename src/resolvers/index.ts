@@ -5,7 +5,7 @@ import { getCachedPageMetadata, setCachedPageMetadata } from '../redis/page_meta
 
 export default {
   Query: {
-    fetchPageMetaData: async (_, { domain }, __) => {
+    fetchPageMetadata: async (_, { domain }, __) => {
 
       let cachedMetadata = await getCachedPageMetadata(domain);
       if (cachedMetadata) {

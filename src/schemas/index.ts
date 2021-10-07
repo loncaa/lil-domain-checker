@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-express';
 
 const domainCheck = gql`
-  type PageMetaData {
+  type PageMetadata {
     domain: String!
     title: String!
     description: String
@@ -12,7 +12,7 @@ const domainCheck = gql`
   }
 
   type Query {
-    fetchPageMetaData(domain: String): PageMetaData!
+    fetchPageMetadata(domain: String): PageMetadata!
   }
 `;
 
