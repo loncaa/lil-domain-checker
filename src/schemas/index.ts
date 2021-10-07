@@ -1,22 +1,18 @@
 import { gql } from 'apollo-server-express';
 
 const domainCheck = gql`
-  type DomainLinksInformation {
+  type PageMetaData {
+    domain: String!
+    title: String!
+    description: String
     internalLinksCount: Int!
     externalLinksCount: Int!
     httpsLinksCount: Int!
     httpLinksCount: Int!
   }
 
-  type DomainMetaData {
-    domain: String
-    title: String!
-    description: String!
-    domainLinksInformation: DomainLinksInformation
-  }
-
   type Query {
-    fetchDomainMetaData(domain: String): DomainMetaData!
+    fetchPageMetaData(domain: String): PageMetaData!
   }
 `;
 

@@ -2,8 +2,7 @@ import * as cheerio from 'cheerio';
 import * as puppeteer from 'puppeteer';
 import loggers from '../loggers/winston';
 
-export async function parseDomainLinks($){
-  const { domain } = $;
+async function fetchPageLinks($, domain){
   const externalLinks = [];
   const internalLinks = [];
 
@@ -37,7 +36,7 @@ export async function parseDomainLinks($){
   }
 }
 
-export async function parseDomainMetaData(domain) {
+export async function fetchPageMetaData(domain) {
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -57,11 +56,12 @@ export async function parseDomainMetaData(domain) {
 
   const title = titleElement.text() || titleElement.attr('content');
   const description = descriptionElement.attr('content');
+  const links = await fetchPageLinks($, domain);
 
   return {
     domain,
     title,
     description,
-    $,
+    ...links
   }
 }
