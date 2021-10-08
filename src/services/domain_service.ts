@@ -1,39 +1,23 @@
 import * as cheerio from 'cheerio';
 import * as puppeteer from 'puppeteer';
-import loggers from '../loggers/winston';
 
-async function fetchPageLinks($, domain){
-  const externalLinks = [];
-  const internalLinks = [];
+import { fetchAndCountCiteBasedLinks, fetchAndCountLongdescBasedLinks, fetchAndCountHrefBasedLinks, fetchAndCountSrcBasedLinks} from '../utils/link_utils';
 
-  let httpLinksCount = 0;
-  let httpsLinksCount = 0;
+async function fetchPageLinksCount($, domain){
+  const response = {
+    domain,
+    internalLinksCount: 0,
+    externalLinksCount: 0,
+    httpLinksCount: 0,
+    httpsLinksCount: 0
+  };
 
-  function pushToLinksArray(elm, attr){
-    const link = $(elm).attr(attr);
-    if(link.startsWith('/') || link.includes(domain)){
-      internalLinks.push(link);
-    }
-    else{
-      externalLinks.push(link);
-    }
+  fetchAndCountCiteBasedLinks($, response);
+  fetchAndCountLongdescBasedLinks($, response);
+  fetchAndCountHrefBasedLinks($, response);
+  fetchAndCountSrcBasedLinks($, response);
 
-    if(link.includes('https')){
-      httpsLinksCount++;
-    }else if(link.includes('http')){
-      httpLinksCount++;
-    }
-  }
-
-  $('link[href], a[href]').each((i, elm) => { pushToLinksArray(elm, 'href') });
-  $('script[src]').each((i, elm) => { pushToLinksArray(elm, 'src') });
-
-  return {
-    internalLinksCount: internalLinks.length,
-    externalLinksCount: externalLinks.length,
-    httpLinksCount,
-    httpsLinksCount,
-  }
+  return response;
 }
 
 export async function fetchPageMetaData(domain) {
@@ -47,7 +31,6 @@ export async function fetchPageMetaData(domain) {
 
   const content = await page.content();
   const $ = cheerio.load(content);
-  $['domain'] = domain;
 
   await browser.close()
 
@@ -56,12 +39,12 @@ export async function fetchPageMetaData(domain) {
 
   const title = titleElement.text() || titleElement.attr('content');
   const description = descriptionElement.attr('content');
-  const links = await fetchPageLinks($, domain);
+  const linksCount = await fetchPageLinksCount($, domain);
 
   return {
     domain,
     title,
     description,
-    ...links
+    ...linksCount
   }
 }
