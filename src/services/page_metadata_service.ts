@@ -1,10 +1,11 @@
 import * as cheerio from 'cheerio';
 import * as puppeteer from 'puppeteer';
+import * as normalizeUrl from 'normalize-url';
 import { URL } from 'url';
 
-import { countScriptContentLinks, countCiteBasedLinks, countLongdescBasedLinks, countHrefBasedLinks, countSrcBasedLinks} from '../utils/link_utils';
+import { countScriptContentLinks, countCiteBasedLinks, countLongdescBasedLinks, countHrefBasedLinks, countSrcBasedLinks } from '../utils/link_utils';
 
-async function getPageLinksCount($, protocol, domain){
+async function getPageLinksCount($, protocol, domain) {
   const response = {
     domain,
     protocol,
@@ -30,7 +31,8 @@ export async function fetchPageMetadata(url) {
   });
 
   const page = await browser.newPage();
-  await page.goto(url);
+  const normalizedUrl = normalizeUrl(url);
+  await page.goto(normalizedUrl);
 
   const content = await page.content();
   const $ = cheerio.load(content);
@@ -43,7 +45,7 @@ export async function fetchPageMetadata(url) {
   const title = titleElement.text() || titleElement.attr('content');
   const description = descriptionElement.attr('content');
 
-  const urlObject = new URL(url);
+  const urlObject = new URL(normalizedUrl);
   const hostname = urlObject.hostname;
   const protocol = urlObject.protocol;
 
