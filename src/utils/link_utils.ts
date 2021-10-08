@@ -14,7 +14,7 @@ function countDomainUrlProperties(url, response) {
     return
   }
 
-  if (url.includes(domain)) {
+  if (normalizedUrl.includes(domain)) {
     response.internalLinksCount++;
   }
   else {
