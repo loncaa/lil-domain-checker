@@ -1,5 +1,5 @@
 import logger from "../loggers/winston"
-import { fetchPageMetaData } from '../services/domain_service';
+import { fetchPageMetadata } from '../services/page_metadata_service';
 
 import { getCachedPageMetadata, setCachedPageMetadata } from '../redis/page_metadata_storage';
 
@@ -13,7 +13,7 @@ export default {
         return cachedMetadata;
       }
 
-      const metadata = await fetchPageMetaData(domain);
+      const metadata = await fetchPageMetadata(domain);
       await setCachedPageMetadata(domain, metadata);
 
       return metadata;
