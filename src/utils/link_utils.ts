@@ -28,7 +28,7 @@ function normalizePageUrl(protocol, domain, url) {
   return normalizedUrl;
 }
 
-function parseUrlProperties(url, response) {
+function countDomainUrlProperties(url, response) {
   const { domain, protocol } = response;
 
   let normalizedUrl = normalizePageUrl(protocol, domain, url);
@@ -50,10 +50,10 @@ function parseUrlProperties(url, response) {
   }
 }
 
-function parseElementsAndCount(elements, cheerioContent, payloadStorage, attr) {
+function passThroughElementsAndCount(elements, cheerioContent, payloadStorage, attr) {
   elements.each((i, elm) => {
     const url = cheerioContent(elm).attr(attr);
-    parseUrlProperties(url, payloadStorage);
+    countDomainUrlProperties(url, payloadStorage);
   });
 
   return payloadStorage;
@@ -61,22 +61,22 @@ function parseElementsAndCount(elements, cheerioContent, payloadStorage, attr) {
 
 export function countHrefBasedLinks(cheerioContent, payloadStorage) {
   const elements = cheerioContent(HREF_ELEMENT_TAGS);
-  return parseElementsAndCount(elements, cheerioContent, payloadStorage, 'href');
+  return passThroughElementsAndCount(elements, cheerioContent, payloadStorage, 'href');
 }
 
 export function countCiteBasedLinks(cheerioContent, payloadStorage) {
   const elements = cheerioContent(CITE_ELEMENT_TAGS);
-  return parseElementsAndCount(elements, cheerioContent, payloadStorage, 'cite');
+  return passThroughElementsAndCount(elements, cheerioContent, payloadStorage, 'cite');
 }
 
 export function countLongdescBasedLinks(cheerioContent, payloadStorage) {
   const elements = cheerioContent(LONGDESC_ELEMENT_TAGS);
-  return parseElementsAndCount(elements, cheerioContent, payloadStorage, 'longdesc');
+  return passThroughElementsAndCount(elements, cheerioContent, payloadStorage, 'longdesc');
 }
 
 export function countSrcBasedLinks(cheerioContent, payloadStorage) {
   const elements = cheerioContent(SRC_ELEMENT_TAGS);
-  return parseElementsAndCount(elements, cheerioContent, payloadStorage, 'src');
+  return passThroughElementsAndCount(elements, cheerioContent, payloadStorage, 'src');
 }
 
 export function countScriptContentLinks(cheerioContent, payloadStorage) {
@@ -86,7 +86,7 @@ export function countScriptContentLinks(cheerioContent, payloadStorage) {
     if (text && text !== "") {
       const urls = detectURLs(text);
       urls.forEach(url => {
-        parseUrlProperties(url, payloadStorage);
+        countDomainUrlProperties(url, payloadStorage);
       });
     }
   })
