@@ -1,32 +1,10 @@
-import * as normalizeUrl from 'normalize-url';
-import logger from '../loggers/winston';
+import { normalizePageUrl, detectURLs} from '../helpers/url_helper';
 
 //source of elements with links: https://stackoverflow.com/questions/2725156/complete-list-of-html-tag-attributes-which-have-a-url-value
 const HREF_ELEMENT_TAGS = 'link[href], a[href], area[href], base[href]';
 const CITE_ELEMENT_TAGS = 'blockquote[cite], del[cite], ins[cite], q[cite]';
 const LONGDESC_ELEMENT_TAGS = 'frame[longdesc], iframe[longdesc], img[longdesc]';
 const SRC_ELEMENT_TAGS = 'script[src], iframe[src], img[src], input[src], audio[src], embed[src], source[src], track[src], video[src]';
-
-function detectURLs(script) {
-  var urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
-  return script.match(urlRegex)
-}
-
-function normalizePageUrl(protocol, domain, url) {
-  let normalizedUrl = null
-
-  try {
-    if (url.startsWith('/')) {
-      normalizedUrl = normalizeUrl(`${protocol}//${domain}${url}`);
-    }else{
-      normalizedUrl = normalizeUrl(url);
-    }
-  } catch (e) {
-    logger.error(`Failed to normalize url: ${url}`)
-  }
-
-  return normalizedUrl;
-}
 
 function countDomainUrlProperties(url, response) {
   const { domain, protocol } = response;
