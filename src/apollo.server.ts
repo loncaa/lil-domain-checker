@@ -28,11 +28,6 @@ export function createApolloServer() {
       logger.error(error.message);
       return error;
     },
-    context: async ({ req }) => {
-      if (req) {
-        return {};
-      }
-    },
   });
 
   return apolloServer;
