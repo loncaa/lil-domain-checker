@@ -1,8 +1,7 @@
-import * as cheerio from 'cheerio';
-import * as puppeteer from 'puppeteer';
 import * as normalizeUrl from 'normalize-url';
 import { URL } from 'url';
 
+import { createCheerioContent } from '../utils/cheerio_utils';
 import { countScriptContentLinks, countCiteBasedLinks, countLongdescBasedLinks, countHrefBasedLinks, countSrcBasedLinks } from '../utils/link_utils';
 
 async function getPageLinksCount($, protocol, domain) {
@@ -25,19 +24,8 @@ async function getPageLinksCount($, protocol, domain) {
 }
 
 export async function fetchPageMetadata(url) {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
-
-  const page = await browser.newPage();
   const normalizedUrl = normalizeUrl(url);
-  await page.goto(normalizedUrl);
-
-  const content = await page.content();
-  const $ = cheerio.load(content);
-
-  await browser.close()
+  const $ = await createCheerioContent(normalizedUrl);
 
   const titleElement = $('head > title') || $('head > meta[property=og:title]');
   const descriptionElement = $('head > meta[name=description]') || $('head > meta[property=og:description]');
