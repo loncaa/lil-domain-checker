@@ -1,33 +1,36 @@
 import * as cheerio from 'cheerio';
 import * as puppeteer from 'puppeteer';
+import { URL } from 'url';
 
-import { fetchAndCountCiteBasedLinks, fetchAndCountLongdescBasedLinks, fetchAndCountHrefBasedLinks, fetchAndCountSrcBasedLinks} from '../utils/link_utils';
+import { countScriptContentLinks, countCiteBasedLinks, countLongdescBasedLinks, countHrefBasedLinks, countSrcBasedLinks} from '../utils/link_utils';
 
-async function fetchPageLinksCount($, domain){
+async function getPageLinksCount($, protocol, domain){
   const response = {
     domain,
+    protocol,
     internalLinksCount: 0,
     externalLinksCount: 0,
     httpLinksCount: 0,
     httpsLinksCount: 0
   };
 
-  fetchAndCountCiteBasedLinks($, response);
-  fetchAndCountLongdescBasedLinks($, response);
-  fetchAndCountHrefBasedLinks($, response);
-  fetchAndCountSrcBasedLinks($, response);
+  countCiteBasedLinks($, response);
+  countLongdescBasedLinks($, response);
+  countHrefBasedLinks($, response);
+  countSrcBasedLinks($, response);
+  countScriptContentLinks($, response);
 
   return response;
 }
 
-export async function fetchPageMetaData(domain) {
+export async function fetchPageMetadata(url) {
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
   const page = await browser.newPage();
-  await page.goto(domain);
+  await page.goto(url);
 
   const content = await page.content();
   const $ = cheerio.load(content);
@@ -39,10 +42,15 @@ export async function fetchPageMetaData(domain) {
 
   const title = titleElement.text() || titleElement.attr('content');
   const description = descriptionElement.attr('content');
-  const linksCount = await fetchPageLinksCount($, domain);
+
+  const urlObject = new URL(url);
+  const hostname = urlObject.hostname;
+  const protocol = urlObject.protocol;
+
+  const linksCount = await getPageLinksCount($, protocol, hostname);
 
   return {
-    domain,
+    domain: hostname,
     title,
     description,
     ...linksCount
