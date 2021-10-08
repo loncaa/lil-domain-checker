@@ -3,14 +3,8 @@
     "module": "commonjs",
     "target": "es6",
     "outDir": "out",
-    "sourceMap": true
+    "sourceMap": true,
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*",
-    "out"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "**/node_modules/*", "out"]
 }
