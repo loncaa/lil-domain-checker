@@ -9,6 +9,10 @@ export function detectURLs(script) {
 export function normalizePageUrl(protocol, domain, url) {
   let normalizedUrl = null
 
+  if(url.startsWith('data:')){
+    return null;
+  }
+
   try {
     if (url.startsWith('/')) {
       normalizedUrl = normalizeUrl(`${protocol}//${domain}${url}`);
